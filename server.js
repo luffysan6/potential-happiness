@@ -24,7 +24,7 @@ app.post("/api/save", async (request, response) => {
   let data = request.body.todo;
   let { name, title, isTrue } = request.body;
 
-  console.log(name, title, isTrue);
+  // console.log(name, title, isTrue);
 
   const result = await collection.insertOne({
     title,
@@ -38,7 +38,7 @@ app.post("/api/save", async (request, response) => {
 app.delete("/api/delete", async (req, res) => {
   const { id } = req.body;
 
-  const result = await collection.deleteOne({ _id: id });
+  const result = await collection.deleteOne({ _id: new ObjectId(id) });
 
   res.send(result);
 });
@@ -46,13 +46,16 @@ app.delete("/api/delete", async (req, res) => {
 // Update APi
 
 app.put("/update", async (req, res) => {
-  const { id, title } = req.body;
+  // console.log(req);
+  const { id, status } = req.body;
+
+  // let todo = await collection.findOne({_id:ObjectId(id)});
 
   const Updated = await collection.updateMany(
-    { title: "Hello World" },
+    { _id: new ObjectId(id) },
     {
       $set: {
-        title: title,
+        status: status,
       },
     },
   );
