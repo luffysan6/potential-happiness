@@ -1,25 +1,25 @@
 const express = require("express");
 const { MongoClient, ObjectId } = require("mongodb");
 const cors = require("cors");
-const { saveTodo } = require("./TodoController.js");
+const { saveTodo } = require("../TodoController.js");
+const path = require("path");
+const TodoRoute = require("./Routes/Todo.Route.js");
+const IndexRoute = require("./Routes/Index.Route.js");
+const connectDB = require("./Configs/DBconnect.js");
 
 const app = express();
-app.use(express.json());
-app.use(cors());
-const URI = "mongodb://localhost:27017/";
-const client = new MongoClient(URI);
-const dbName = "Todo";
 const PORT = 3000;
 
-client.connect();
+app.use(express.json());
+app.use(cors());
+app.use(IndexRoute);
+app.use("/todo", TodoRoute);
+// app.use("/user",userRoutes)
 
-const db = client.db(dbName);
+connectDB();
 
-const collection = db.collection("todolist");
+console.log(IndexRoute);
 
-app.get("/", (request, response) => {
-  response.send("Hello World From Express Backend");
-});
 app.post("/api/save", async (request, response) => {
   let data = request.body.todo;
   let { name, title, isTrue } = request.body;
@@ -33,14 +33,6 @@ app.post("/api/save", async (request, response) => {
   });
 
   response.json(result);
-});
-
-app.delete("/api/delete", async (req, res) => {
-  const { id } = req.body;
-
-  const result = await collection.deleteOne({ _id: new ObjectId(id) });
-
-  res.send(result);
 });
 
 // Update APi
