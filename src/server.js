@@ -10,8 +10,8 @@ const connectDB = require("./Configs/DBconnect.js");
 const app = express();
 const PORT = 3000;
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 app.use(IndexRoute);
 app.use("/todo", TodoRoute);
 // app.use("/user",userRoutes)
@@ -33,7 +33,10 @@ app.post("/api/save", async (request, response) => {
   });
 
   response.json(result);
+  
 });
+
+
 
 // Update APi
 
