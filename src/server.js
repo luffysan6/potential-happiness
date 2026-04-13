@@ -1,12 +1,12 @@
-const express = require("express");
 const { MongoClient, ObjectId } = require("mongodb");
+const express = require("express");
 const cors = require("cors");
 const { saveTodo } = require("../TodoController.js");
 const path = require("path");
 const TodoRoute = require("./Routes/Todo.Route.js");
 const IndexRoute = require("./Routes/Index.Route.js");
 const connectDB = require("./Configs/DBconnect.js");
-
+const DummyRoutes = require('./Routes/TodoRoutes.js');
 const app = express();
 const PORT = 3000;
 
@@ -14,7 +14,9 @@ app.use(cors());
 app.use(express.json());
 app.use(IndexRoute);
 app.use("/todo", TodoRoute);
-// app.use("/user",userRoutes)
+app.use("/api",DummyRoutes);
+
+// http://localhost:3000/api
 
 connectDB();
 
