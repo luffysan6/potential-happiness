@@ -6,21 +6,24 @@ const path = require("path");
 const TodoRoute = require("./Routes/Todo.Route.js");
 const IndexRoute = require("./Routes/Index.Route.js");
 const connectDB = require("./Configs/DBconnect.js");
-const DummyRoutes = require('./Routes/TodoRoutes.js');
+const DummyRoutes = require("./Routes/TodoRoutes.js");
+const basicMiddleware = require("./middleware/basic.middleware.js");
+const { resolve } = require("dns");
 const app = express();
 const PORT = 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // middleware
 app.use(IndexRoute);
 app.use("/todo", TodoRoute);
-app.use("/api",DummyRoutes);
+app.use("/api", DummyRoutes);
+// app.use("/api", basicMiddleware, DummyRoutes);
 
-// http://localhost:3000/api
+// http://localhost:3000/
 
 connectDB();
 
-console.log(IndexRoute);
+// console.log(IndexRoute);
 
 app.post("/api/save", async (request, response) => {
   let data = request.body.todo;
@@ -35,10 +38,7 @@ app.post("/api/save", async (request, response) => {
   });
 
   response.json(result);
-  
 });
-
-
 
 // Update APi
 
