@@ -5,7 +5,7 @@ const { saveTodo } = require("../TodoController.js");
 const path = require("path");
 const TodoRoute = require("./Routes/Todo.Route.js");
 const IndexRoute = require("./Routes/Index.Route.js");
-const connectDB = require("./Configs/DBconnect.js");
+const connectDB = require("./Configs/connectDB.js");
 const DummyRoutes = require("./Routes/TodoRoutes.js");
 const basicMiddleware = require("./middleware/basic.middleware.js");
 const { resolve } = require("dns");
@@ -13,8 +13,12 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
-app.use(express.json()); // middleware
+app.use(express.json());
 app.use(IndexRoute);
+app.use((req, res, next) => {
+  console.log("Time: %d", Date.now());
+  next();
+}); // middleware
 app.use("/todo", TodoRoute);
 app.use("/api", DummyRoutes);
 // app.use("/api", basicMiddleware, DummyRoutes);

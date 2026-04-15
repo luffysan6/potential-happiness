@@ -1,21 +1,11 @@
-const { MongoClient, ObjectId } = require("mongodb");
-const URI = "mongodb://localhost:27017/";
-const client = new MongoClient(URI);
-const dbName = "Todo";
-const PORT = 3000;
+const todoModel = require("../models/Todo.model.js");
 
-client.connect();
-
-const db = client.db(dbName);
-
-const collection = db.collection("todolist");
+// const collection = db.collection("todolist");
 const Home = async (request, response) => {
   try {
-    const result = await collection.find({}).toArray();
+    const result =await todoModel.find();
 
-    let total_status = result.map((item) => item.status);
-
-    return response.json(total_status);
+    return response.json(result);
   } catch (error) {
     console.log(
       "Error At Home Todo '/' Routes Error message :\t",
@@ -33,18 +23,16 @@ const deletetodo = async (req, res) => {
   try {
     const { id } = req.body;
 
-    if(!id){
+    if (!id) {
       return response.status(500).json({
-      success: false,
-      message: "Please Send a Id in Request",
-    });
+        success: false,
+        message: "Please Send a Id in Request",
+      });
     }
 
-   
+    const result = await collection.deleteOne({ _id: new ObjectId(id) });
 
-  const result = await collection.deleteOne({ _id: new ObjectId(id) });
-
-  res.send(result);
+    res.send(result);
   } catch (error) {
     console.log(
       "Error At Delete Todo '/delete' Routes Error message :\t",
@@ -57,5 +45,31 @@ const deletetodo = async (req, res) => {
     });
   }
 };
+const saveTodo = async (request, response) => {
+  try {
+    const { title } = request.body;
+    let status;
+    if (!request.body.status) {
+      status = false;
+    }
+    status = request.body.status;
 
-module.exports = { Home, deletetodo };
+    const todo = new todoModel({
+      title: title,
+      status: status,
+    });
+    const result = await todo.save();
+
+    return response.json({
+      message: "Saved SuccessFully",
+      result,
+    });
+  } catch (error) {
+    console.log("Error While Saving Todo's");
+    return response.json({
+      message: "Error At Backend",
+    });
+  }
+};
+
+module.exports = { Home, deletetodo, saveTodo };
