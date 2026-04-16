@@ -3,7 +3,9 @@ const todoModel = require("../models/Todo.model.js");
 // const collection = db.collection("todolist");
 const Home = async (request, response) => {
   try {
-    const result =await todoModel.find();
+    const result = await todoModel.find({
+      status: false,
+    });
 
     return response.json(result);
   } catch (error) {
@@ -72,4 +74,69 @@ const saveTodo = async (request, response) => {
   }
 };
 
-module.exports = { Home, deletetodo, saveTodo };
+const todoById = async (req, res) => {
+  try {
+    console.log(req.params);
+    const id = req.params.id;
+    const result = await todoModel.findById(id);
+    res.json({
+      result,
+    });
+  } catch (error) {
+    console.log("Error While Saving Todo's");
+    return response.json({
+      message: "Error At Backend",
+    });
+  }
+};
+
+const todoByIdDel = async (req, res) => {
+  try {
+    console.log(req.params);
+    const id = req.params.id;
+    const result = await todoModel.findByIdAndDelete(id);
+    res.json({
+      result,
+    });
+  } catch (error) {
+    console.log("Error While Saving Todo's");
+    return response.json({
+      message: "Error At Backend",
+    });
+  }
+};
+
+const updatetodo = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const uppdatebody = req.body;
+    console.log(uppdatebody);
+
+    const result = await todoModel.findByIdAndUpdate(
+      id,
+      {
+        status: uppdatebody.status,
+      },
+      {
+        new: true,
+      },
+    );
+    return res.json(result);
+  } catch (error) {
+    console.log("Error While Saving Todo's");
+    return response.json({
+      message: "Error At Backend",
+    });
+  }
+};
+
+
+todoModel.deleteMany({},{})
+module.exports = {
+  Home,
+  deletetodo,
+  saveTodo,
+  todoById,
+  todoByIdDel,
+  updatetodo,
+};
