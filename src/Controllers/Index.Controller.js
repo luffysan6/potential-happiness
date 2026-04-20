@@ -1,19 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const Index = async (req, res) => {
-  const uploadPath = path.join(
-    __dirname,
-    "..",
-    "hello_world",
-    "hello",
-    "world",
-  );
-  if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true });
-  }
-
-  console.log(uploadPath);
-  return res.status(200).send("Hello From Index Route\t\n" + uploadPath);
+  return res.status(200).send("Hello From Index Route\t\n");
 };
 
 const handleupload = async (req, res) => {
